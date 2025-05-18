@@ -12,4 +12,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 file(GLOB SOURCES "src/*.cpp")
 
 add_executable(MarinaDB ${SOURCES}
-        include/BinaryIO.h)
+        include/BinaryIO.h
+        include/CommandType.h
+        include/CommandMap.h
+        include/CommandHandlers.h)
