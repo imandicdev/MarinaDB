@@ -11,4 +11,5 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 # Gather all .cpp files in src/
 file(GLOB SOURCES "src/*.cpp")
 
-add_executable(MarinaDB ${SOURCES})
+add_executable(MarinaDB ${SOURCES}
+        include/BinaryIO.h)
