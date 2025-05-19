@@ -16,3 +16,9 @@ add_executable(MarinaDB ${SOURCES}
         include/CommandType.h
         include/CommandMap.h
         include/CommandHandlers.h)
+
+# --- Add benchmark executable ---
+file(GLOB SRC_FILES "src/*.cpp")
+list(REMOVE_ITEM SRC_FILES "${PROJECT_SOURCE_DIR}/src/main.cpp")
+add_executable(benchmark_table_index tests/benchmark_table_index.cpp ${SRC_FILES})
+target_include_directories(benchmark_table_index PRIVATE ${PROJECT_SOURCE_DIR}/include)

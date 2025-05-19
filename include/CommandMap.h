@@ -15,7 +15,11 @@ inline const std::unordered_map<std::string, CommandType> CommandMap = {
     {"help",         CommandType::Help}
 };
 
-inline CommandType parseCommand(const std::string& cmd) {
+inline CommandType parseCommand(const std::string& cmd, const std::vector<std::string>& args = {}) {
+    // Special handling: select ... where ...
+    if (cmd == "select" && args.size() > 2 && args[1] == "where") {
+        return CommandType::SelectWhere;
+    }
     auto it = CommandMap.find(cmd);
     return (it != CommandMap.end()) ? it->second : CommandType::Invalid;
 }

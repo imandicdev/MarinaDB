@@ -10,6 +10,7 @@ enum class CommandType {
     CreateTable,
     Insert,
     Select,
+    SelectWhere,
     Exit,
     Help,
     Invalid
@@ -22,6 +23,7 @@ inline std::string to_string(CommandType type) {
         case CommandType::CreateTable:  return "create_table";
         case CommandType::Insert:       return "insert";
         case CommandType::Select:       return "select";
+        case CommandType::SelectWhere:  return "select_where";
         case CommandType::Exit:         return "exit";
         case CommandType::Help:         return "help";
         default:                        return "invalid";
