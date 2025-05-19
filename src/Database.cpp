@@ -17,7 +17,8 @@ void Database::createTable(const TableSchema& schema) {
 
 Table* Database::getTable(const std::string& name) {
     const auto it = tables.find(name);
-    if (it == tables.end()) return nullptr;
+    if (it == tables.end())
+        throw std::runtime_error("Table '" + name + "' does not exist.");
     return it->second.get();
 }
 
@@ -64,7 +65,7 @@ bool Database::saveToFile(const std::filesystem::path& path) const {
 
 std::unique_ptr<Database> Database::loadFromFile(const std::filesystem::path& path) {
     std::ifstream ifs(path, std::ios::binary);
-    if (!ifs) return nullptr;
+    if (!ifs) throw std::runtime_error("Failed to open file for reading: " + path.string());
 
     char magic[4];
     ifs.read(magic, 4);

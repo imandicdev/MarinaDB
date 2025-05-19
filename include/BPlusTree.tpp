@@ -3,6 +3,7 @@
 
 #pragma once
 #include "BPlusTree.h"
+#include <stdexcept>
 
 template<typename Key, typename Value>
 BPlusTree<Key, Value>::BPlusTree(std::size_t nodeOrder)
@@ -29,6 +30,9 @@ void BPlusTree<Key, Value>::clear() {
 
 template<typename Key, typename Value>
 void BPlusTree<Key, Value>::insert(const Key& key, const Value& value) {
+    if constexpr (!std::is_copy_constructible_v<Value>) {
+        throw std::invalid_argument("Attempted to insert a non-copyable value into BPlusTree.");
+    }
     Key upKey;
     std::unique_ptr<Node> newChild;
     if (insertRecursive(root_.get(), key, value, upKey, newChild, height_)) {
@@ -118,6 +122,7 @@ void BPlusTree<Key, Value>::splitInternal(InternalNode* node, std::unique_ptr<In
 
 template<typename Key, typename Value>
 std::optional<Value> BPlusTree<Key, Value>::find(const Key& key) const {
+    if (!root_) throw std::runtime_error("Cannot find in an empty BPlusTree.");
     return findRecursive(root_.get(), key, height_);
 }
 
@@ -150,6 +155,7 @@ std::size_t BPlusTree<Key, Value>::height() const {
 template<typename Key, typename Value>
 std::size_t BPlusTree<Key, Value>::findChildIndex(const std::vector<Key>& keys, const Key& key) const {
     // Find the first key > 'key'
+    if (keys.empty()) throw std::runtime_error("Invalid operation: children index on empty keys vector in BPlusTree.");
     return std::distance(keys.begin(), std::upper_bound(keys.begin(), keys.end(), key));
 }
 

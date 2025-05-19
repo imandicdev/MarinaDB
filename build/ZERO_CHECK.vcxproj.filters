@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\cyber\CLionProjects\MarinaDB\build\CMakeFiles\175c908f8f3749254ba9a43f4db3eb3c\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{59008037-254E-396D-96CC-09AFB1AE1AB5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

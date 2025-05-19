@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include <ranges>
 #include <unordered_map>
 #include <memory>
 #include <string>
@@ -9,6 +10,7 @@
 #include "CommandMap.h"
 #include "CommandHandlers.h"
 #include "Database.h"
+// <iomanip> is required ONLY for help message alignment using std::setw below.
 
 // ----------- Utility functions -----------
 
@@ -120,12 +122,10 @@ int main() {
         const auto& records = table->getRecords();
         const auto& columns = table->schema().getColumns();
         // Print header
-        for (const auto& col : columns)
-            std::cout << col.name << "\t";
+        std::ranges::for_each(columns, [](const Column& col) { std::cout << col.name << "\t"; });
         std::cout << "\n";
-        // Print each record
-        for (const auto& rec : records) {
-            for (const auto& col : columns) {
+        std::ranges::for_each(records, [&](const Record& rec) {
+            std::ranges::for_each(columns, [&](const Column& col) {
                 const auto& val = rec.at(col.name);
                 if (col.type == DataType::Integer)
                     std::cout << std::get<int>(val) << "\t";
@@ -133,9 +133,9 @@ int main() {
                     std::cout << std::get<float>(val) << "\t";
                 else
                     std::cout << std::get<std::string>(val) << "\t";
-            }
+            });
             std::cout << "\n";
-        }
+        });
     });
 
     // --- select_where: select <table> where <col>=<val> ---
@@ -164,7 +164,7 @@ int main() {
             column = args[2];
             valueString = args.size() > 3 ? args[3] : "";
         }
-        auto colIt = std::find_if(columns.begin(), columns.end(), [&](const Column& c){ return c.name == column; });
+        auto colIt = std::ranges::find_if(columns, [&](const Column& c){ return c.name == column; });
         if (colIt == columns.end()) {
             std::cout << "Column '" << column << "' not found in schema.\n";
             return;
@@ -203,25 +203,26 @@ int main() {
         }
         if (!usedIndex) {
             bool found = false;
-            for (const auto& rec : table->getRecords()) {
-                auto it = rec.find(column);
-                if (it != rec.end() && it->second == key) {
-                    for (const auto& col : columns)
-                        std::cout << col.name << "\t";
-                    std::cout << "\n";
-                    for (const auto& col : columns) {
-                        const auto& val = rec.at(col.name);
-                        if (col.type == DataType::Integer)
-                            std::cout << std::get<int>(val) << "\t";
-                        else if (col.type == DataType::Float)
-                            std::cout << std::get<float>(val) << "\t";
-                        else
-                            std::cout << std::get<std::string>(val) << "\t";
-                    }
-                    std::cout << "\n";
-                    found = true;
-                    break;
-                }
+            auto recIt = std::ranges::find_if(
+                table->getRecords(),
+                [&](const Record& rec) {
+                    auto it = rec.find(column);
+                    return it != rec.end() && it->second == key;
+                });
+            if (recIt != table->getRecords().end()) {
+                std::ranges::for_each(columns, [](const Column& col) { std::cout << col.name << "\t"; });
+                std::cout << "\n";
+                std::ranges::for_each(columns, [&](const Column& col) {
+                    const auto& val = recIt->at(col.name);
+                    if (col.type == DataType::Integer)
+                        std::cout << std::get<int>(val) << "\t";
+                    else if (col.type == DataType::Float)
+                        std::cout << std::get<float>(val) << "\t";
+                    else
+                        std::cout << std::get<std::string>(val) << "\t";
+                });
+                std::cout << "\n";
+                found = true;
             }
             if (!found) std::cout << "No record found with " << column << "=" << valueString << "\n";
         }
@@ -252,16 +253,24 @@ int main() {
     std::cout << "MarinaDB CLI v0.2. Type 'help' for commands.\n";
     std::cout << "(C) 2024-2025 Ilija Mandic. All rights reserved.\n";
     std::string line;
-    while (std::cout << "marina> ", std::getline(std::cin, line)) {
-        std::istringstream iss(line);
-        std::string cmdWord;
-        iss >> cmdWord;
-        std::vector<std::string> args;
-        for (std::string arg; iss >> arg;) args.push_back(arg);
-        std::ranges::transform(cmdWord, cmdWord.begin(), ::tolower);
-        CommandType cmd = parseCommand(cmdWord, args);
-        if (cmd == CommandType::Exit) break;
-        dispatcher.dispatch(cmd, args);
+    try {
+        while (std::cout << "marina> ", std::getline(std::cin, line)) {
+            try {
+                std::istringstream iss(line);
+                std::string cmdWord;
+                iss >> cmdWord;
+                std::vector<std::string> args;
+                for (std::string arg; iss >> arg;) args.push_back(arg);
+                std::ranges::transform(cmdWord, cmdWord.begin(), ::tolower);
+                CommandType cmd = parseCommand(cmdWord, args);
+                if (cmd == CommandType::Exit) break;
+                dispatcher.dispatch(cmd, args);
+            } catch (const std::exception& ex) {
+                std::cout << "[Command Error] " << ex.what() << std::endl;
+            }
+        }
+    } catch (const std::exception& ex) {
+        std::cout << "[Fatal Error] " << ex.what() << std::endl;
     }
     std::cout << "Goodbye!\n";
 }
