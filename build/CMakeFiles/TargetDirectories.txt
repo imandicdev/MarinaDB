@@ -1,4 +1,0 @@
-C:/Users/cyber/CLionProjects/MarinaDB/build/CMakeFiles/MarinaDB.dir
-C:/Users/cyber/CLionProjects/MarinaDB/build/CMakeFiles/benchmark_table_index.dir
-C:/Users/cyber/CLionProjects/MarinaDB/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/cyber/CLionProjects/MarinaDB/build/CMakeFiles/ZERO_CHECK.dir
