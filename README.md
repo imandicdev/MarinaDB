@@ -1,5 +1,17 @@
 # MarinaDB
 
+## Project Inspiration & Context
+
+MarinaDB is inspired by classic foundational works like Al Stevens’ "C Database Development" and "C++ Database Development." Those books were seminal in teaching how to build a relational database engine from scratch in C and early C++—covering key concepts such as tables, schemas, indexing, and file storage, all in a way accessible to curious programmers.
+
+This project updates and modernizes those concepts—reimagining the same principles with C++17+ and today’s best practices. It aims to:
+
+- **Modernize the codebase:** Using STL containers, smart pointers, and a modular, idiomatic C++ design, making it easier to read, maintain, and port.
+- **Retain educational value:** By exposing the inner workings of database engines (table structures, B+ tree indexes, serialization, command parsing, etc), MarinaDB is an ideal new resource for programmers seeking to learn practical DB internals.
+- **Advance clarity and usability:** By adding a CLI shell, benchmarks, and a clear directory structure, it makes both learning and demonstration far more accessible than older or more complex codebases.
+
+If you’ve ever explored Al Stevens’ DB engine books, MarinaDB stands as a modern, readable, and portable answer to the same challenge—now with the power, clarity, and style of modern C++. Perfect for study, demos, or as your own base for further experimentation.
+
 **Relational Database Engine in Modern C++ (Educational, Fast, and Indexed)**
 
 ---
