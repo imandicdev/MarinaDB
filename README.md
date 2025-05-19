@@ -126,8 +126,8 @@ Bulk access (sequential retrieval of all records) time: 56.905 ms. Summed id: 49
 ## Author & Contact
 
 - Author: **Ilija Mandic**
-- [Your GitHub profile/link]
-- For questions, suggestions, or invitations (including internship/interview context!), open an issue or contact via GitHub.
+- https://github.com/imandicdev
+- For questions or suggestions, please open an issue on GitHub.
 
 ---
 
